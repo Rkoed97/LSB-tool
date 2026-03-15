@@ -1,6 +1,6 @@
-from util.security import get_hash, get_generator, verify_hash
-from util.utils import embed_files, test_fit, extract_hash, extract_files, read_preamble
-from util.errors import die, E
+from lsb_tool.util.security import get_hash, get_generator, verify_hash
+from lsb_tool.util.utils import embed_files, test_fit, extract_hash, extract_files, read_preamble
+from lsb_tool.util.errors import die, E
 from PIL import Image, UnidentifiedImageError
 from math import prod, ceil
 from pathlib import Path
@@ -171,7 +171,6 @@ class Container:
 					    f"Could not write '{out_name}'. "
 					    f"Check that you have write permission in the current directory.")
 				written.append(out_name)
-			print(f"Extracted {len(written)} file(s): {written}")
 		else:
 			die(E.WRONG_PASSWORD,
 			    "Could not verify the embedded data. "

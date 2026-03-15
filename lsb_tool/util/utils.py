@@ -1,6 +1,6 @@
 from math import prod, ceil
 from pathlib import Path
-from util.errors import die, E
+from lsb_tool.util.errors import die, E
 
 # Header size lookup table (kept for future reference / validation use).
 # Each entry is [hash_bits, file_count_bits, ???, total_bits] for a given mode.
@@ -257,7 +257,7 @@ def test_fit(container, channels, depth):
 
 
 def status(container):
-	"""Print a diagnostic summary of the container's capacity and contents.
+	"""Print a verbose diagnostic summary of the container after embed or extract.
 
 	Args:
 		container: A Container instance (used after embed or extract).
@@ -267,25 +267,27 @@ def status(container):
 	preamble_pixels = ceil(13 / channels)
 	total_pixels = prod(container.size)
 	main_pixels = total_pixels - preamble_pixels
-	capacity = main_pixels * channels * depth
+	capacity_bytes = (main_pixels * channels * depth) // 8
 
 	name_bits_per_file = container.max_name_len * 8
-	files_data_bits = sum([len(f) * 8 for f in container.files])
-	message_size = 512 + 32 + (32 + name_bits_per_file) * len(container.files) + files_data_bits
+	files_data_bits = sum(len(f) * 8 for f in container.files)
+	used_bytes = ceil((512 + 32 + (32 + name_bits_per_file) * len(container.files) + files_data_bits) / 8)
+	pct = used_bytes / capacity_bytes * 100 if capacity_bytes else 0.0
 
-	print(f"""
-{container.filename}
+	w, h = container.size
+	file_list = ", ".join(
+		f"{name} ({len(data):,} B)" if name else f"({len(data):,} B)"
+		for name, data in zip(container.filenames, container.files)
+	) or "none"
 
-Embedded files sizes: {[len(i) for i in container.files]}
-
-->{container.hash}
-->{container.rng}
-->{container.img.mode} mode
-->{container.size} pixels
-->{channels * depth} estimated bits/pixel (depth={depth})
-->{capacity} estimated bits to fit
-->{message_size} estimated message size
-""")
+	print(
+		f"  image    : {container.filename} ({container.img.mode}, {w}×{h})\n"
+		f"  depth    : {depth} bit/channel → {channels * depth} bits/pixel\n"
+		f"  capacity : {capacity_bytes:,} bytes\n"
+		f"  used     : {used_bytes:,} bytes ({pct:.1f}%)\n"
+		f"  files    : {file_list}\n"
+		f"  hash     : {container.hash}"
+	)
 
 
 

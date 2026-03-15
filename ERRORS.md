@@ -30,21 +30,20 @@ Use the code (`xx`) to find the relevant entry below.
 
 ### E02 — Invalid arguments
 
-**Message:** `No mode selected. Use -E to embed files or -e to extract.`
+**Message:** `No mode selected. Use -E/--embed to embed files or -e/--extract to extract.`
 (argparse also uses exit code 2 for unrecognised or missing required flags.)
 
 **Cause:** The tool was invoked without specifying what to do, or a required
 argument (such as `-i` or `-p`) was omitted.
 
-**Fix:** Check the usage section at the top of `main.py --help`. At minimum you
-need:
+**Fix:** Run `lsb-tool --help` (or `python -m lsb_tool --help`) to see all options. At minimum you need:
 
 ```
 # Embed
-python main.py -E -i image.png -p password -f file_to_hide.txt
+lsb-tool -E -i image.png -p password -f file_to_hide.txt
 
 # Extract
-python main.py -e -i image.png -p password
+lsb-tool -e -i image.png -p password
 ```
 
 ---

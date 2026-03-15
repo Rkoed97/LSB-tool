@@ -31,9 +31,9 @@ from PIL import Image
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
-from util.container import Container
-from util.errors import E
-from util.utils import inject_pixel, extract_pixel
+from lsb_tool.util.container import Container
+from lsb_tool.util.errors import E
+from lsb_tool.util.utils import inject_pixel, extract_pixel
 
 
 # ---------------------------------------------------------------------------
@@ -484,7 +484,7 @@ class TestErrors:
 
     def _run(self, *args, cwd=None):
         return subprocess.run(
-            [sys.executable, str(ROOT / "main.py"), *args],
+            [sys.executable, "-m", "lsb_tool", *args],
             capture_output=True,
             cwd=str(cwd or Path.cwd()),
         )

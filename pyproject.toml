@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lsb-tool"
-version = "2.0.0"
+version = "2.1.0"
 description = "Embed and extract files hidden inside PNG images using N-bit LSB steganography."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -27,19 +27,16 @@ dependencies = [
 ]
 
 [project.scripts]
-lsb-tool = "main:main"
+lsb-tool = "lsb_tool.__main__:main"
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
 ]
 
-[tool.setuptools]
-py-modules = ["main"]
-
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["util*"]
+include = ["lsb_tool*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
